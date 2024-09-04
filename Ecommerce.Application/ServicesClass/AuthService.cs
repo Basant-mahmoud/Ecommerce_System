@@ -3,6 +3,7 @@ using Ecommerce_System.Ecommerce.Application.InterfacesServices;
 using Ecommerce_System.Ecommerce.Domain.InterfacesRepo;
 using Ecommerce_System.Ecommerce.Domain.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -28,15 +29,13 @@ namespace Ecommerce_System.Ecommerce.Application.ServicesClass
 
         public async Task<AuthModel> RegisterAsync(RegisterModel model)
         {
-            // Check if the email is already registered
+           
             if (await _authRepository.EmailExistAsync(model.Email))
                 return new AuthModel { Message = "Email is already registered!" };
 
-            // Check if the username is already registered
             if (await _authRepository.UsernameExistsAsync(model.Username))
                 return new AuthModel { Message = "Username is already registered!" };
 
-            // Create a new ApplicationUser
             var user = new ApplicationUser
             {
                 UserName = model.Username,
@@ -44,7 +43,13 @@ namespace Ecommerce_System.Ecommerce.Application.ServicesClass
                 Name = model.Name,
             };
 
-            // Use the password provided by the user
+            // Use the password provided in the model
+           
+
+            // Create JWT token
+            var jwtSecurityToken = await CreateJwtToken(user);
+
+            
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (!result.Succeeded)
@@ -53,16 +58,11 @@ namespace Ecommerce_System.Ecommerce.Application.ServicesClass
                 return new AuthModel { Message = errors };
             }
 
-            // Assign role if provided
             if (!string.IsNullOrEmpty(model.Role))
             {
                 await _userManager.AddToRoleAsync(user, model.Role);
             }
 
-            // Create JWT token
-            var jwtSecurityToken = await CreateJwtToken(user);
-
-            // Return the AuthModel with user details and token
             return new AuthModel
             {
                 Email = user.Email,
@@ -71,12 +71,11 @@ namespace Ecommerce_System.Ecommerce.Application.ServicesClass
                 Roles = new List<string> { model.Role },
                 Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
                 Username = user.UserName,
-                passward = model.Password // Returning the password if necessary
+                passward = model.Password
             };
         }
 
-
-
+        
         public async Task<AuthModel> LoginAsync(LoginModel model)
         {
             var authModel = new AuthModel();
@@ -98,6 +97,7 @@ namespace Ecommerce_System.Ecommerce.Application.ServicesClass
             authModel.name = user.Name;
             authModel.ExpiresOn = jwtSecurityToken.ValidTo;
             authModel.Roles = rolesList.ToList();
+
             return authModel;
         }
 
