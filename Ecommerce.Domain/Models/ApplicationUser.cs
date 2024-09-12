@@ -7,6 +7,8 @@ namespace Ecommerce_System.Ecommerce.Domain.Models
     {
         [Required, MaxLength(50)]
         public string Name { get; set; }
-    
+        public virtual ICollection<Order> Orders { get; set; }
+        public virtual ICollection<Review> Reviews { get; set; }
+
     }
 }
