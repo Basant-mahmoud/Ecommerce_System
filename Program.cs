@@ -61,9 +61,11 @@ namespace Ecommerce_System
             // REPO
             builder.Services.AddScoped<IAuthRepository, AuthRepository>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
             //SERVICES
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<IProductService, ProductServices>();
 
             // Configure JWT authentication
             builder.Services.AddAuthentication(options =>

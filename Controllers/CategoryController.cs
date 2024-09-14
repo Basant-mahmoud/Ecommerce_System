@@ -91,7 +91,7 @@ namespace Ecommerce_System.Controllers
             }
         }
         
-       [HttpDelete("DeleteCtegory{id:int}")]
+       [HttpDelete("DeleteCtegory")]
        public async Task<IActionResult> DeleteCategory(int id)
        {
            if (!ModelState.IsValid)

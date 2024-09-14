@@ -73,7 +73,10 @@ namespace Ecommerce_System.Ecommerce.Application.ServicesClass
             {
                 throw new Exception("Category not found.");
             }
-
+            if (categoryDto.Name == null)
+            {
+                throw new Exception("Name Cant be Null");
+            }
             category.Name = categoryDto.Name.ToLower(); // Update the category name
 
             var updatedCategory = await _categoryRepository.UpdateAsync(category);
