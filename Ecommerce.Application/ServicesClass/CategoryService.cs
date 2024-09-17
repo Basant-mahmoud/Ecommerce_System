@@ -77,14 +77,14 @@ namespace Ecommerce_System.Ecommerce.Application.ServicesClass
             {
                 throw new Exception("Name Cant be Null");
             }
-            category.Name = categoryDto.Name.ToLower(); // Update the category name
+            category.Name = categoryDto.Name.ToLower(); 
 
             var updatedCategory = await _categoryRepository.UpdateAsync(category);
             if (updatedCategory == null)
             {
                 throw new Exception("Failed to update the category, please try again.");
             }
-            return updatedCategory; // Return the updated category
+            return updatedCategory; 
 
         }
         public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
