@@ -16,6 +16,41 @@ namespace Ecommerce_System.Ecommerce.Application.ServicesClass
 
         public async Task<Product> CreateProductAsync(ProductDto product)
         {
+            if (string.IsNullOrEmpty(product.Name) || product.Name == "string")
+            {
+                throw new Exception("plz add product Name");
+            }
+
+            if (string.IsNullOrEmpty(product.Description) || product.Description == "string")
+            {
+                throw new Exception("plz add product Description");
+            }
+
+            if (string.IsNullOrEmpty(product.Code) || product.Code == "string")
+            {
+                throw new Exception("plz add product Code");
+            }
+
+            if (product.Price == 0)
+            {
+                throw new Exception("plz add product Price");
+            }
+
+           
+            if (product.StockQuanlity == 0)
+            {
+                throw new Exception("plz add product Quanity in your stock");
+            }
+
+            if (string.IsNullOrEmpty(product.ImageUrl) || product.ImageUrl == "string")
+            {
+                throw new Exception("plz add product Image");
+            }
+
+            if (product.CategoryId == 0)
+            {
+                throw new Exception("plz add product Category");
+            }
             var created = new Product
             {
                 Name = product.Name,
