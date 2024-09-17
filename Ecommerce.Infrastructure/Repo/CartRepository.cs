@@ -1,17 +1,19 @@
 ﻿using Ecommerce_System.Ecommerce.Domain.InterfacesRepo;
 using Ecommerce_System.Ecommerce.Domain.Models;
 using Ecommerce_System.Ecommerce.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ecommerce_System.Ecommerce.Infrastructure.Repo
 {
     public class CartRepository : ICartRepository
     {
-        private readonly ApplicationUser _use;
+        //private readonly UserManager<ApplicationUser> _userManager;
         private readonly EcommerceDBContext _dbContext;
-        public CartRepository(ApplicationUser use, EcommerceDBContext dbContext)
+
+        public CartRepository(/*UserManager<ApplicationUser> userManager,*/ EcommerceDBContext dbContext)
         {
-            _use = use;
+            //_userManager = userManager;
             _dbContext = dbContext;
         }
         public async Task AddCartAsync(Cart cart)
@@ -51,5 +53,13 @@ namespace Ecommerce_System.Ecommerce.Infrastructure.Repo
         {
             _dbContext.CartItems.Update(cartItem);
         }
+        public async Task<IEnumerable<Cart>>GetAllCartAsync()
+        {
+            return await _dbContext.Carts
+                .Include(c => c.CartItems)
+                .ThenInclude(ci => ci.Product)
+                .ToListAsync();
+        }
+        
     }
 }

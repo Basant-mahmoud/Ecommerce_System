@@ -9,6 +9,7 @@ namespace Ecommerce_System.Ecommerce.Domain.InterfacesRepo
         Task AddCartItemAsync(CartItem cartItem);
         Task UpdateCartItemAsync(CartItem cartItem);
         Task RemoveCartItemAsync(int cartItemId);
+        Task<IEnumerable<Cart>> GetAllCartAsync();
         Task SaveAsync();
     }
 }

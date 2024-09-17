@@ -6,10 +6,10 @@ using Ecommerce_System.Ecommerce.Infrastructure.Repo;
 
 namespace Ecommerce_System.Ecommerce.Application.ServicesClass
 {
-    public class ProductServices : IProductService
+    public class ProductService : IProductService
     {
         private readonly IProductRepository _productrepository;
-        public ProductServices(IProductRepository productrepository)
+        public ProductService(IProductRepository productrepository)
         {
             _productrepository = productrepository;
         }

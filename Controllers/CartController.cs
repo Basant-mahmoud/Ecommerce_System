@@ -55,7 +55,7 @@ namespace Ecommerce_System.Controllers
                 }
 
                 await _cartService.AddCartItemAsync(userId, item.productId, item.quantity);
-                return Ok();
+                return Ok("Product add to Cart Successfly");
             }
             catch (Exception ex)
             {
@@ -76,7 +76,45 @@ namespace Ecommerce_System.Controllers
                     return Unauthorized();
                 }
                 await _cartService.RemoveCartItemAsync(cartItemId, userId);
-                return NoContent();
+                return Ok("Cart item deleted Successfly");
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+
+        }
+        [HttpGet("GetAllCart")]
+        public async Task<IActionResult> GetAllCart()
+        {
+            try
+            {
+                /*var userId = User.GetUserId();
+                if (userId == null)
+                {
+                    return Unauthorized();
+                }*/
+               var carts= await _cartService.GetAllCartsAsync();
+               return Ok(carts);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+        }
+        [HttpDelete]
+        [Route("DecreaseQuantity/{cartItemId}")]
+        public async Task<IActionResult> DecreaseQuantity(int cartItemId)
+        {
+            try
+            {
+                var userId = User.GetUserId();
+                if (userId == null)
+                {
+                    return Unauthorized();
+                }
+                await _cartService.DecreaseCartItemQuantityAsync(cartItemId, userId);
+                return Ok("Decrease Quantity Successfly");
             }
             catch (Exception ex)
             {
