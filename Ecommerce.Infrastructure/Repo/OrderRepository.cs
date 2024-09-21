@@ -36,8 +36,9 @@ namespace Ecommerce_System.Ecommerce.Infrastructure.Repo
         public async Task<Order> GetOrderByUserIdAsync(string userId)
         {
             return await _dbContext.Orders
-               .Include(o => o.OrderItems)
-               .FirstOrDefaultAsync(o => o.UserId == userId);
+       .Include(o => o.OrderItems) 
+       .ThenInclude(oi => oi.Product) 
+       .FirstOrDefaultAsync(o => o.UserId == userId);
         }
 
         public async Task <bool> RemoveOrderItemAsync(int orderItemId)

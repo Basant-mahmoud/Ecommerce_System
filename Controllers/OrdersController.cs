@@ -50,5 +50,26 @@ namespace Ecommerce_System.Controllers
             }
            
         }
+        [HttpGet("GetOderByUserId")]
+        public async Task<IActionResult> GetOderByUserId()
+        {
+            try
+            {
+                var userId = User.GetUserId();
+                if (userId == null)
+                {
+                    return Unauthorized();
+                }
+                var order = await _orderService.GetOrderByUserIdAsync(userId);
+                return Ok(order);
+
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new {message=ex.Message});
+            }
+        }
     }
+   
+    
 }

@@ -8,7 +8,7 @@ namespace Ecommerce_System.Ecommerce.Application.InterfacesServices
         Task<OrderDto> CreateOrderAsync(string Userid);
         Task AddOrderItemAsync(OrderItem orderItem);
         Task<IEnumerable<OrderDto>> GetAllOrdersAsync();
-        Task<Order> GetOrderByUserIdAsync(string userId);
+        Task<OrderDto> GetOrderByUserIdAsync(string userId);
         Task<bool> RemoveOrderItemAsync(int orderItemId);
         Task UpdateOrderItemAsync(OrderItem orderItem);
     }

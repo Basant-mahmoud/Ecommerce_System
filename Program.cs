@@ -23,6 +23,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Ecommerce_System.Ecommerce.Application.ServicesClass;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using System.Text.Json;
 namespace Ecommerce_System
 {
     public class Program
@@ -99,6 +100,11 @@ namespace Ecommerce_System
             {
                 options.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin"));
                 options.AddPolicy("InstructorPolicy", policy => policy.RequireRole("User"));
+            });
+            builder.Services.AddControllers().AddJsonOptions(opts =>
+            {
+                opts.JsonSerializerOptions.IgnoreNullValues = true;
+                opts.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             });
             // Add controllers and Swagger
             builder.Services.AddControllers();

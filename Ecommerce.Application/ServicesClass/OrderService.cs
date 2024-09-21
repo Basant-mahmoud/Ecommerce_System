@@ -99,10 +99,31 @@ namespace Ecommerce_System.Ecommerce.Application.ServicesClass
             }).ToList();
         }
 
-        public Task<Order> GetOrderByUserIdAsync(string userId)
+        public async Task<OrderDto> GetOrderByUserIdAsync(string userId)
         {
-            throw new NotImplementedException();
+            var order = await _orderRepository.GetOrderByUserIdAsync(userId);
+            if (order == null)
+            {
+                throw new Exception("User doesn't have any orders yet");
+            }
+
+            return new OrderDto
+            {
+                Id = order.Id,
+                UserId = order.UserId,
+                OrderDate = order.OrderDate,
+                TotalAmount = order.TotalAmount,
+                OrderItems = order.OrderItems.Select(oi => new OrderItemDto
+                {
+                    Id = oi.Id,
+                    ProductId = oi.ProductId,
+                    ProductName = oi.Product?.Name ?? "Unknown", // Use a default value if Product is null
+                    Quantity = oi.Quantity,
+                    Price = oi.Product?.Price ?? 0 // Use a default value if Price is null
+                }).ToList()
+            };
         }
+
 
         public Task<bool> RemoveOrderItemAsync(int orderItemId)
         {
