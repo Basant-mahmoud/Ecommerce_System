@@ -10,15 +10,53 @@ namespace Ecommerce_System.Ecommerce.Application.ServicesClass
     {
         private readonly IOrderRepository _orderRepository;
         private readonly ICartRepository _cartRepository;
-        public OrderService(IOrderRepository orderRepository, ICartRepository cartRepository)
+        private readonly IProductRepository _productRepository;
+        public OrderService(IOrderRepository orderRepository, ICartRepository cartRepository, IProductRepository productRepository)
         {
             _orderRepository = orderRepository;
             _cartRepository = cartRepository;
+            _productRepository = productRepository;
         }
-        public Task AddOrderItemAsync(OrderItem orderItem)
+        public async Task AddOrderItemAsync(string userId, AddItemDto orderItem)
         {
-            throw new NotImplementedException();
+            // Fetch orders by user ID
+            var orders = await _orderRepository.GetOrdersByUserIdAsync(userId);
+
+            // Check if the order exists and belongs to the user
+            var order = orders.FirstOrDefault(o => o.Id == orderItem.orderid);
+            if (order == null)
+            {
+                throw new Exception("Order ID doesn't belong to this user.");
+            }
+
+            // Fetch product by ID
+            var product = await _productRepository.GetByIdAsync(orderItem.productId);
+            if (product == null)
+            {
+                throw new Exception("Product ID is not correct.");
+            }
+
+            // Create a new OrderItem
+            var newOrderItem = new OrderItem
+            {
+                OrderId = order.Id,
+                ProductId = orderItem.productId,
+                Quantity = orderItem.quantity,
+                Price = product.Price 
+            };
+
+            // Add the new order item
+            await _orderRepository.AddOrderItemAsync(newOrderItem);
+
+            // Update product stock quantity
+            product.StockQuanlity -= orderItem.quantity;
+            await _productRepository.UpdateAsync(product);
+
+            // Update the total order amount
+            order.TotalAmount += orderItem.quantity * product.Price;
+            await _orderRepository.UpdateOrderAsync(order);
         }
+
 
         public async Task<OrderDto> CreateOrderAsync(string userId)
         {
@@ -99,15 +137,15 @@ namespace Ecommerce_System.Ecommerce.Application.ServicesClass
             }).ToList();
         }
 
-        public async Task<OrderDto> GetOrderByUserIdAsync(string userId)
+        public async Task<IEnumerable<OrderDto>> GetOrdersByUserIdAsync(string userId)
         {
-            var order = await _orderRepository.GetOrderByUserIdAsync(userId);
-            if (order == null)
+            var orders = await _orderRepository.GetOrdersByUserIdAsync(userId);
+            if (orders == null || !orders.Any())
             {
                 throw new Exception("User doesn't have any orders yet");
             }
 
-            return new OrderDto
+            return orders.Select(order => new OrderDto
             {
                 Id = order.Id,
                 UserId = order.UserId,
@@ -117,22 +155,75 @@ namespace Ecommerce_System.Ecommerce.Application.ServicesClass
                 {
                     Id = oi.Id,
                     ProductId = oi.ProductId,
-                    ProductName = oi.Product?.Name ?? "Unknown", // Use a default value if Product is null
+                    ProductName = oi.Product?.Name ?? "Unknown",
                     Quantity = oi.Quantity,
-                    Price = oi.Product?.Price ?? 0 // Use a default value if Price is null
+                    Price = oi.Product?.Price ?? 0
                 }).ToList()
-            };
+            }).ToList();
         }
 
-
-        public Task<bool> RemoveOrderItemAsync(int orderItemId)
+        public async Task<bool> RemoveOrderItemAsync(string Userid, int orderId)
         {
-            throw new NotImplementedException();
+            var orders = await _orderRepository.GetOrdersByUserIdAsync(Userid);
+            var order = orders.FirstOrDefault(o => o.Id == orderId);
+
+            if (order == null)
+            {
+                throw new Exception("Order ID doesn't belong to this user.");
+            }
+
+           bool result = await _orderRepository.RemoveOrderAsync(orderId);
+
+            if (result==false)
+            {
+                throw new Exception("Can't remove this order item. Please try again.");
+            }
+            return true;
         }
 
-        public Task UpdateOrderItemAsync(OrderItem orderItem)
+        public async Task UpdateOrderItemAsync(string userId, UpdateOrderItemDto updateOrder)
         {
-            throw new NotImplementedException();
+            // Fetch orders by user ID
+            var orders = await _orderRepository.GetOrdersByUserIdAsync(userId);
+
+            // Check if the order exists and belongs to the user
+            var order = orders.FirstOrDefault(o => o.Id == updateOrder.orderId);
+            if (order == null)
+            {
+                throw new Exception("Order ID doesn't belong to this user.");
+            }
+
+            // Validate that the product exists
+            var product = await _productRepository.GetByIdAsync(updateOrder.ProductId);
+            if (product == null)
+            {
+                throw new Exception("Product ID is not correct.");
+            }
+
+            // Check if the order item exists in the order
+            var orderItem = order.OrderItems.FirstOrDefault(oi => oi.Id == updateOrder.orderitemId);
+            if (orderItem == null)
+            {
+                throw new Exception("order item not in this product ");
+
+            }
+            else
+            {
+                // Update the existing order item
+                orderItem.Quantity = updateOrder.Quantity;
+                orderItem.ProductId = updateOrder.ProductId;
+
+                // Update the order item in the repository
+                await _orderRepository.UpdateOrderItemAsync(orderItem);
+            }
+
+            // Adjust product stock after adding or updating an order item
+            product.StockQuanlity -= updateOrder.Quantity;
+            await _productRepository.UpdateAsync(product);
+            order.TotalAmount= updateOrder.Quantity*product.Price;
+            await _orderRepository.UpdateOrderAsync(order);
         }
+
+
     }
 }

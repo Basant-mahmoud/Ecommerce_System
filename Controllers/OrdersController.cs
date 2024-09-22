@@ -1,5 +1,6 @@
 ﻿using Ecommerce_System.Ecommerce.Application.Helper;
 using Ecommerce_System.Ecommerce.Application.InterfacesServices;
+using Ecommerce_System.Ecommerce.Domain.DTO;
 using Ecommerce_System.Ecommerce.Domain.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -60,13 +61,70 @@ namespace Ecommerce_System.Controllers
                 {
                     return Unauthorized();
                 }
-                var order = await _orderService.GetOrderByUserIdAsync(userId);
+                var order = await _orderService.GetOrdersByUserIdAsync(userId);
                 return Ok(order);
 
             }
             catch (Exception ex)
             {
                 return NotFound(new {message=ex.Message});
+            }
+        }
+        [HttpDelete("RemoveOrder")]
+        public async Task<IActionResult> RemoveOrder([FromBody] RemoveOrderDto removeorder)
+        {
+            try
+            {
+                /*var userId = User.GetUserId();
+                if (userId == null)
+                {
+                    return Unauthorized();
+                }*/
+                var order = await _orderService.RemoveOrderItemAsync(removeorder.UserId, removeorder.OrderId);
+                return Ok("Order Deleted Successfly");
+
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+        }
+        [HttpPut("UpdateOrderItem")]
+        public async Task<IActionResult> UpdateOrderItem( [FromBody] UpdateOrderItemDto updateorder)
+        {
+            try
+            {
+                var userId = User.GetUserId(); 
+                if (userId == null)
+                {
+                    return Unauthorized();
+                }
+
+                await _orderService.UpdateOrderItemAsync(userId, updateorder);
+                return Ok("Order item updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+        }
+        [HttpPost("AddOrderItem")]
+        public async Task<IActionResult> AddOrderItem([FromBody] AddItemDto orderitem)
+        {
+            try
+            {
+                var userId = User.GetUserId();
+                if (userId == null)
+                {
+                    return Unauthorized();
+                }
+
+                await _orderService.AddOrderItemAsync(userId, orderitem);
+                return Ok("Order item Added successfully.");
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
             }
         }
     }

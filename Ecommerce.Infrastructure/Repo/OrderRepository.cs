@@ -33,20 +33,25 @@ namespace Ecommerce_System.Ecommerce.Infrastructure.Repo
                 .ToListAsync();
         }
 
-        public async Task<Order> GetOrderByUserIdAsync(string userId)
-        {
-            return await _dbContext.Orders
-       .Include(o => o.OrderItems) 
-       .ThenInclude(oi => oi.Product) 
-       .FirstOrDefaultAsync(o => o.UserId == userId);
-        }
+       public async Task<IEnumerable<Order>> GetOrdersByUserIdAsync(string userId)
+{
+    return await _dbContext.Orders
+        .Include(o => o.OrderItems) 
+        .ThenInclude(oi => oi.Product) 
+        .Where(o => o.UserId == userId) 
+        .ToListAsync(); 
+}
 
-        public async Task <bool> RemoveOrderItemAsync(int orderItemId)
+
+        public async Task <bool> RemoveOrderAsync(int orderId)
         {
-            var orderItem = await _dbContext.OrderItems.FindAsync(orderItemId);
-            if (orderItem != null)
+            var order = await _dbContext.Orders
+        .Include(o => o.OrderItems) 
+        .FirstOrDefaultAsync(o => o.Id == orderId); 
+
+            if (order != null)
             {
-                _dbContext.OrderItems.Remove(orderItem);
+                _dbContext.Orders.Remove(order);
                 await _dbContext.SaveChangesAsync();
                 return true;
             }
@@ -56,10 +61,19 @@ namespace Ecommerce_System.Ecommerce.Infrastructure.Repo
 
         public async Task UpdateOrderItemAsync(OrderItem orderItem)
         {
-            _dbContext.OrderItems.Update(orderItem);
-            await _dbContext.SaveChangesAsync();
+                _dbContext.OrderItems.Update(orderItem);
+                await _dbContext.SaveChangesAsync();
+   
         }
 
-       
+        public async Task UpdateOrderAsync(Order order)
+        {
+            _dbContext.Orders.Update(order);
+            await _dbContext.SaveChangesAsync();
+        }
+        public async Task SaveAsync()
+        {
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

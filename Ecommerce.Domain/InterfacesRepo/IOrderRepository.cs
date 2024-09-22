@@ -4,11 +4,13 @@ namespace Ecommerce_System.Ecommerce.Domain.InterfacesRepo
 {
     public interface IOrderRepository
     {
-        Task<Order> GetOrderByUserIdAsync(string userId);
+        Task<IEnumerable<Order>> GetOrdersByUserIdAsync(string userId);
         Task <Order>AddOrderAsync(Order order);
         Task AddOrderItemAsync(OrderItem orderItem);
         Task UpdateOrderItemAsync(OrderItem orderItem);
-        Task<bool> RemoveOrderItemAsync(int orderItemId);
+        Task<bool> RemoveOrderAsync(int orderId);
         Task<IEnumerable<Order>> GetAllOrderAsync();
+        Task UpdateOrderAsync(Order order);
+        Task SaveAsync();
     }
 }
