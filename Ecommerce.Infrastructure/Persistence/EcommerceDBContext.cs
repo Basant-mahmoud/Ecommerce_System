@@ -15,6 +15,7 @@ namespace Ecommerce_System.Ecommerce.Infrastructure.Persistence
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
+        public DbSet<Review> Reviews { get; set; }
         public EcommerceDBContext(DbContextOptions<EcommerceDBContext> options) : base(options)
         {
 
@@ -34,6 +35,11 @@ namespace Ecommerce_System.Ecommerce.Infrastructure.Persistence
                 .HasMany(o => o.OrderItems)
                 .WithOne(oi => oi.Order)
                 .HasForeignKey(oi => oi.OrderId);
+            // product and review
+            modelBuilder.Entity<Product>()
+                .HasMany(o => o.Reviews)
+                .WithOne(oi => oi.Product)
+                .HasForeignKey(oi => oi.ProductId);
 
             // Configure Product and OrderItems relationship
             modelBuilder.Entity<Product>()
