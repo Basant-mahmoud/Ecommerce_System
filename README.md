@@ -1,4 +1,4 @@
-# eCommerce System - .NET 8 Web API
+# ECommerce System - .NET 8 Web API
 
 This is a RESTful eCommerce API built using .NET 8. The API allows users to manage products, categories, orders, customers, and payments. It provides various endpoints to perform CRUD operations and process transactions for an online store.
 
