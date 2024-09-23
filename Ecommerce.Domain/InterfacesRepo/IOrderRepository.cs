@@ -10,6 +10,7 @@ namespace Ecommerce_System.Ecommerce.Domain.InterfacesRepo
         Task UpdateOrderItemAsync(OrderItem orderItem);
         Task<bool> RemoveOrderAsync(int orderId);
         Task<IEnumerable<Order>> GetAllOrderAsync();
+        Task<Order>GetOrderByIdAsync(int orderId);
         Task UpdateOrderAsync(Order order);
         Task SaveAsync();
     }

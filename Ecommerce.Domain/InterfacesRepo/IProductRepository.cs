@@ -9,5 +9,6 @@ namespace Ecommerce_System.Ecommerce.Domain.InterfacesRepo
         Task<Product> UpdateAsync(Product product);
         Task<bool> DeleteAsync(int id);
         Task<Product> GetByIdAsync(int id);
+        
     }
 }

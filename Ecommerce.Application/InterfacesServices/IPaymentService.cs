@@ -1,15 +1,17 @@
 ﻿using Ecommerce_System.Ecommerce.Domain.DTO;
 using Ecommerce_System.Ecommerce.Domain.Models;
+using System.Threading.Tasks;
 
 namespace Ecommerce_System.Ecommerce.Application.InterfacesServices
 {
     public interface IPaymentService
     {
         Task<Payment> CreateAsync(PaymnetDto payment);
-        Task<Payment> UpdateAsync(PaymnetDto payment);
         Task DeleteAsync(int paymentId);
+        Task<IEnumerable<Payment>> GetAllPaymentAsync();
         Task<Payment> GetPaymentByIdAsync(int PaymentId);
-        Task<IEnumerable<Payment>> GetAllPaymentsAsync();
-        Task<Payment> GetUserPaymentAsync(int orderId);
+        Task<Payment> GetOrderPaymentAsync(int OrderId);
+        Task<Payment> UpdatePaymentAsync(PaymnetDto payment);
+
     }
 }
