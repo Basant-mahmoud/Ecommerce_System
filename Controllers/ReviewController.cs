@@ -1,6 +1,7 @@
 ﻿using Ecommerce_System.Ecommerce.Application.Helper;
 using Ecommerce_System.Ecommerce.Application.InterfacesServices;
 using Ecommerce_System.Ecommerce.Domain.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +18,7 @@ namespace Ecommerce_System.Controllers
         }
 
         [HttpPost("AddReview")]
+        [Authorize(Roles = "User , Admin")]
         public async Task<IActionResult> AddReview([FromBody] AddReviewDto review)
         {
             try
@@ -37,6 +39,7 @@ namespace Ecommerce_System.Controllers
             }
         }
         [HttpDelete("DeleteReview")]
+        [Authorize(Roles = "User , Admin")]
         public async Task<IActionResult> DeleteReview(int ReviewId)
         {
             try
@@ -57,6 +60,7 @@ namespace Ecommerce_System.Controllers
             }
         }
         [HttpGet("GetAllProductReview")]
+        [Authorize(Roles = "User , Admin")]
         public async Task<IActionResult> GetAllProductReview(int productId)
         {
             try
@@ -76,6 +80,7 @@ namespace Ecommerce_System.Controllers
             }
         }
         [HttpGet("GetReviewById")]
+        [Authorize(Roles = "User ,Admin")]
         public async Task<IActionResult> GetReviewById(int reviewid)
         {
             try
@@ -95,6 +100,7 @@ namespace Ecommerce_System.Controllers
             }
         }
         [HttpPut("UpdateReview")]
+        [Authorize(Roles = "User , Admin")]
         public async Task<IActionResult> UpdateReview(UpdateReviewDto updatereview)
         {
             try

@@ -18,6 +18,8 @@ namespace Ecommerce_System.Controllers
             _cartService = cartService;
         }
         [HttpGet("GetUserCart")]
+        [Authorize(Roles = "User")]
+
         public async Task<IActionResult> GetUserCart() 
         {
             try
@@ -44,6 +46,8 @@ namespace Ecommerce_System.Controllers
 
         }
         [HttpPost("AddItem")]
+        [Authorize(Roles = "User")]
+
         public async Task<IActionResult> AddItem(AddItemDto item)
         {
             try
@@ -66,6 +70,8 @@ namespace Ecommerce_System.Controllers
 
         [HttpDelete]
         [Route("RemoveItem/{cartItemId}")]
+        [Authorize(Roles = "User")]
+
         public async Task<IActionResult> RemoveItem(int cartItemId)
         {
             try
@@ -85,15 +91,17 @@ namespace Ecommerce_System.Controllers
 
         }
         [HttpGet("GetAllCart")]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> GetAllCart()
         {
             try
             {
-                /*var userId = User.GetUserId();
+                var userId = User.GetUserId();
                 if (userId == null)
                 {
                     return Unauthorized();
-                }*/
+                }
                var carts= await _cartService.GetAllCartsAsync();
                return Ok(carts);
             }
@@ -104,6 +112,8 @@ namespace Ecommerce_System.Controllers
         }
         [HttpDelete]
         [Route("DecreaseQuantity/{cartItemId}")]
+        [Authorize(Roles = "User")]
+
         public async Task<IActionResult> DecreaseQuantity(int cartItemId)
         {
             try

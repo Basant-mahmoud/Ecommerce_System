@@ -2,6 +2,7 @@
 using Ecommerce_System.Ecommerce.Application.InterfacesServices;
 using Ecommerce_System.Ecommerce.Domain.DTO;
 using Ecommerce_System.Ecommerce.Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ecommerce_System.Ecommerce.API.Controllers
@@ -18,6 +19,8 @@ namespace Ecommerce_System.Ecommerce.API.Controllers
         }
 
         [HttpPost("CreatePayment")]
+        [Authorize(Roles = "User,Admin")]
+
         public async Task<IActionResult> CreatePayment([FromBody] PaymnetDto paymentDto)
         {
 
@@ -44,6 +47,8 @@ namespace Ecommerce_System.Ecommerce.API.Controllers
         }
 
         [HttpGet("GetPaymentById")]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> GetPaymentById(int PaymentId)
         {
             try
@@ -64,6 +69,7 @@ namespace Ecommerce_System.Ecommerce.API.Controllers
         }
 
         [HttpGet("GetAllPayments")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllPayments()
         {
             try
@@ -84,6 +90,7 @@ namespace Ecommerce_System.Ecommerce.API.Controllers
         }
 
         [HttpDelete("DeletePayment")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeletePayment(int PaymentId)
         {
             try
@@ -104,6 +111,7 @@ namespace Ecommerce_System.Ecommerce.API.Controllers
         }
 
         [HttpPut("UpdatePayment")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdatePayment( [FromBody] PaymnetDto paymentDto)
         {
             if (!ModelState.IsValid)
@@ -129,10 +137,17 @@ namespace Ecommerce_System.Ecommerce.API.Controllers
         }
 
         [HttpGet("GetPaymentByOrderId")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetPaymentByOrderId(int orderId)
         {
             try
             {
+                var userId = User.GetUserId();
+                if (userId == null)
+                {
+                    return Unauthorized();
+
+                }
                 var payment = await _paymentService.GetOrderPaymentAsync(orderId);
                 return Ok(payment);
             }

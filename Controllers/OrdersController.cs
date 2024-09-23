@@ -2,6 +2,7 @@
 using Ecommerce_System.Ecommerce.Application.InterfacesServices;
 using Ecommerce_System.Ecommerce.Domain.DTO;
 using Ecommerce_System.Ecommerce.Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +18,8 @@ namespace Ecommerce_System.Controllers
             _orderService = orderService;
         }
         [HttpGet("GetAllOrder")]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> GetAllOrders()
         {
             try
@@ -32,6 +35,7 @@ namespace Ecommerce_System.Controllers
         }
 
         [HttpPost("CreateOrder")]
+        [Authorize(Roles = "User,Admin")]
         public async Task<IActionResult> CreateOrder()
         {
             try
@@ -52,6 +56,7 @@ namespace Ecommerce_System.Controllers
            
         }
         [HttpGet("GetOderByUserId")]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> GetOderByUserId()
         {
             try
@@ -71,6 +76,7 @@ namespace Ecommerce_System.Controllers
             }
         }
         [HttpDelete("RemoveOrder")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RemoveOrder([FromBody] RemoveOrderDto removeorder)
         {
             try
@@ -90,6 +96,7 @@ namespace Ecommerce_System.Controllers
             }
         }
         [HttpPut("UpdateOrderItem")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateOrderItem( [FromBody] UpdateOrderItemDto updateorder)
         {
             try
@@ -109,6 +116,7 @@ namespace Ecommerce_System.Controllers
             }
         }
         [HttpPost("AddOrderItem")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddOrderItem([FromBody] AddItemDto orderitem)
         {
             try

@@ -1,5 +1,6 @@
 ﻿using Ecommerce_System.Ecommerce.Application.InterfacesServices;
 using Ecommerce_System.Ecommerce.Domain.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,6 +16,8 @@ namespace Ecommerce_System.Controllers
             _categoryService = categoryService;
         }
         [HttpPost("Create Category")]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> CreateCategory([FromBody] CategoryDto category)
         {
             if (!ModelState.IsValid)
@@ -33,6 +36,8 @@ namespace Ecommerce_System.Controllers
             return Ok(createdCategory);
         }
         [HttpGet("GetByid{id:int}")]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> GetCategoryById(int id)
         {
             if (!ModelState.IsValid)
@@ -51,6 +56,8 @@ namespace Ecommerce_System.Controllers
             }
         }
         [HttpPost("GetByName")]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> GetCategoryByName([FromBody] CategoryDto categ)
         {
             if (!ModelState.IsValid)
@@ -68,6 +75,8 @@ namespace Ecommerce_System.Controllers
             }
         }
       [HttpPost("updateCategory")]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> UpdateCategory(int id, [FromBody] CategoryDto categ)
         {
             if (!ModelState.IsValid)
@@ -92,7 +101,9 @@ namespace Ecommerce_System.Controllers
         }
         
        [HttpDelete("DeleteCtegory")]
-       public async Task<IActionResult> DeleteCategory(int id)
+        [Authorize(Roles = "Admin")]
+
+        public async Task<IActionResult> DeleteCategory(int id)
        {
            if (!ModelState.IsValid)
            {
@@ -110,7 +121,8 @@ namespace Ecommerce_System.Controllers
        }
         
        [HttpGet("GetAllCategory")]
-       public async Task<IActionResult> GetAllCategory()
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAllCategory()
        {
            try
            {
