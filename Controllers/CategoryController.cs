@@ -36,7 +36,7 @@ namespace Ecommerce_System.Controllers
             return Ok(createdCategory);
         }
         [HttpGet("GetByid{id:int}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin , User")]
 
         public async Task<IActionResult> GetCategoryById(int id)
         {
@@ -56,7 +56,7 @@ namespace Ecommerce_System.Controllers
             }
         }
         [HttpPost("GetByName")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin , User")]
 
         public async Task<IActionResult> GetCategoryByName([FromBody] CategoryDto categ)
         {
@@ -121,7 +121,7 @@ namespace Ecommerce_System.Controllers
        }
         
        [HttpGet("GetAllCategory")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin , User")]
         public async Task<IActionResult> GetAllCategory()
        {
            try

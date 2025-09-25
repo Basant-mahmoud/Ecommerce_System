@@ -18,7 +18,7 @@ namespace Ecommerce_System.Controllers
         }
 
         [HttpPost("AddProduct")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "User , Admin")]
 
         public async Task<IActionResult> AddProduct([FromBody]ProductDto product)
         {
