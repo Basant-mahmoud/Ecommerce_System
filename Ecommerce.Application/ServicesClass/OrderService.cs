@@ -115,7 +115,11 @@ namespace Ecommerce_System.Ecommerce.Application.ServicesClass
                 throw new Exception("An error occurred while creating the order.", ex);
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
 
         public async Task<IEnumerable<OrderDto>> GetAllOrdersAsync()
         {
