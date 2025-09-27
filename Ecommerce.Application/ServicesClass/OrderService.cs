@@ -57,7 +57,12 @@ namespace Ecommerce_System.Ecommerce.Application.ServicesClass
             await _orderRepository.UpdateOrderAsync(order);
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task<OrderDto> CreateOrderAsync(string userId)
         {
             try
